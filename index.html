@@ -7,16 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #222;
-    --border: #2a2a2a;
-    --accent: #c8f135;
-    --text: #f0f0f0;
-    --muted: #666;
-    --a: #5b9cf6;
-    --b: #f97b6b;
-    --c: #a78bfa;
+    --bg: #faf6f1;
+    --surface: #fff9f4;
+    --surface2: #f3ede6;
+    --border: #e8ddd4;
+    --accent: #e8608a;
+    --accent-light: #fce8ef;
+    --text: #3a2a2e;
+    --muted: #b89fa8;
+    --a: #e8608a;
+    --b: #c084b0;
+    --c: #e8956a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; min-height: 100vh; padding: 24px 16px 80px; }
@@ -31,13 +32,14 @@
   .nickname-slots { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .nickname-slot { display: flex; align-items: center; gap: 10px; }
   .slot-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Gmarket Sans', sans-serif; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-  .dot-a { background: rgba(91,156,246,0.15); color: var(--a); }
-  .dot-b { background: rgba(249,123,107,0.15); color: var(--b); }
-  .dot-c { background: rgba(167,139,250,0.15); color: var(--c); }
+  .dot-a { background: #fce8ef; color: var(--a); }
+  .dot-b { background: #f3e8f7; color: var(--b); }
+  .dot-c { background: #fdeee6; color: var(--c); }
   .nickname-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 14px; padding: 9px 12px; outline: none; transition: border-color 0.2s; width: 100%; }
   .nickname-input:focus { border-color: var(--accent); }
-  .nickname-save { width: 100%; padding: 12px; background: var(--accent); color: #0f0f0f; border: none; border-radius: 12px; font-family: 'Gmarket Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; }
+  .nickname-save { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: 'Gmarket Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; }
   .nickname-save:active { opacity: 0.85; }
+  .nickname-skip { width: 100%; padding: 8px; background: none; color: var(--muted); border: none; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; cursor: pointer; margin-top: 6px; text-decoration: underline; }
 
   /* 진행바 */
   .progress-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
@@ -46,15 +48,15 @@
   .goal-label { font-size: 12px; color: var(--muted); }
   .bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
   .bar-fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.5s cubic-bezier(.4,0,.2,1); }
-  .bar-fill.warn { background: #f5a623; }
-  .bar-fill.over { background: #f06060; }
+  .bar-fill.warn { background: #e8a030; }
+  .bar-fill.over { background: #c0392b; }
   .progress-bot { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
 
   /* 멤버 카드 */
   .members { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .member-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 12px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
-  .member-card:hover { border-color: #444; }
-  .member-card.active { border-color: var(--accent); }
+  .member-card:hover { border-color: var(--accent); }
+  .member-card.active { border-color: var(--accent); background: var(--accent-light); }
   .member-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Gmarket Sans', sans-serif; font-size: 11px; font-weight: 700; margin: 0 auto 8px; }
   .member-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
   .member-amt { font-family: 'Gmarket Sans', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
@@ -67,36 +69,48 @@
   .input-row label { font-size: 12px; color: var(--muted); width: 30px; flex-shrink: 0; }
   select, input[type=text], input[type=number] { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-size: 14px; padding: 9px 12px; outline: none; transition: border-color 0.2s; }
   select:focus, input:focus { border-color: var(--accent); }
-  select option { background: var(--surface2); }
-  .add-btn { width: 100%; padding: 12px; background: var(--accent); color: #0f0f0f; border: none; border-radius: 12px; font-family: 'Gmarket Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: opacity 0.15s, transform 0.1s; }
+  .add-btn { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-family: 'Gmarket Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; transition: opacity 0.15s, transform 0.1s; }
   .add-btn:active { opacity: 0.85; transform: scale(0.98); }
   .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* 수정 모달 */
+  .modal-bg { position: fixed; inset: 0; background: rgba(58,42,46,0.35); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 24px; }
+  .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; }
+  .modal-box h3 { font-family: 'Gmarket Sans', sans-serif; font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+  .modal-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+  .modal-row label { font-size: 12px; color: var(--muted); width: 30px; flex-shrink: 0; }
+  .modal-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .modal-save { flex: 1; padding: 10px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-family: 'Gmarket Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .modal-cancel { flex: 1; padding: 10px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); border-radius: 10px; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; cursor: pointer; }
 
   /* 로그 */
   .log-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
   .log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .log-header h2 { font-size: 13px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-  .filter-tabs { display: flex; gap: 6px; }
+  .filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-tab { background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 4px 10px; font-size: 11px; color: var(--muted); cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all 0.15s; white-space: nowrap; }
-  .filter-tab.on { background: var(--accent); color: #0f0f0f; border-color: var(--accent); font-weight: 700; }
-  .log-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .filter-tab.on { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 700; }
+  .log-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .log-item:last-child { border-bottom: none; }
   .log-badge { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; font-family: 'Gmarket Sans', sans-serif; }
-  .badge-a { background: rgba(91,156,246,0.15); color: var(--a); }
-  .badge-b { background: rgba(249,123,107,0.15); color: var(--b); }
-  .badge-c { background: rgba(167,139,250,0.15); color: var(--c); }
-  .log-memo { flex: 1; color: var(--text); font-size: 13px; }
-  .log-date { font-size: 11px; color: var(--muted); }
+  .badge-a { background: #fce8ef; color: var(--a); }
+  .badge-b { background: #f3e8f7; color: var(--b); }
+  .badge-c { background: #fdeee6; color: var(--c); }
+  .log-memo { flex: 1; color: var(--text); font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .log-date { font-size: 11px; color: var(--muted); white-space: nowrap; }
   .log-amt { font-family: 'Gmarket Sans', sans-serif; font-weight: 700; font-size: 14px; white-space: nowrap; }
-  .log-del { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; padding: 2px 4px; border-radius: 6px; line-height: 1; transition: color 0.15s; }
-  .log-del:hover { color: #f06060; }
+  .log-actions { display: flex; gap: 2px; flex-shrink: 0; }
+  .log-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 3px 5px; border-radius: 6px; line-height: 1; transition: background 0.15s; color: var(--muted); }
+  .log-btn:hover { background: var(--surface2); }
+  .log-btn.del:hover { color: #c0392b; }
+  .log-btn.edit:hover { color: var(--accent); }
   .empty { font-size: 13px; color: var(--muted); text-align: center; padding: 24px 0; }
   .loading { font-size: 13px; color: var(--muted); text-align: center; padding: 16px 0; }
 
   .change-names { text-align: center; margin-top: 16px; }
   .change-names button { background: none; border: none; cursor: pointer; font-size: 11px; color: var(--muted); text-decoration: underline; font-family: inherit; }
 
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #0f0f0f; font-family: 'Gmarket Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 99px; opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap; z-index: 99; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-family: 'Gmarket Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 99px; opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap; z-index: 300; }
   .toast.show { opacity: 1; }
 </style>
 </head>
@@ -122,6 +136,30 @@
       </div>
     </div>
     <button class="nickname-save" onclick="saveNames()">시작하기</button>
+    <button class="nickname-skip" onclick="skipNames()">이름 설정 필요없어요</button>
+  </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal-bg" id="edit-modal" style="display:none;">
+  <div class="modal-box">
+    <h3>내역 수정</h3>
+    <div class="modal-row">
+      <label>누구</label>
+      <select id="edit-member"></select>
+    </div>
+    <div class="modal-row">
+      <label>내용</label>
+      <input type="text" id="edit-memo" maxlength="20">
+    </div>
+    <div class="modal-row">
+      <label>금액</label>
+      <input type="number" id="edit-amt" min="0" step="100">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeEdit()">취소</button>
+      <button class="modal-save" onclick="saveEdit()">저장</button>
+    </div>
   </div>
 </div>
 
@@ -190,13 +228,12 @@ const headers = {
 function fmt(n) { return Number(n).toLocaleString('ko-KR') + '원'; }
 function today() { return new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }); }
 
-// 이름 관리
 function getNames() {
   try { return JSON.parse(localStorage.getItem('duduk_names') || 'null'); } catch(e) { return null; }
 }
 function nameOf(key) {
   const names = getNames();
-  return names ? names[key] : key;
+  return names ? (names[key] || key) : key;
 }
 
 function saveNames() {
@@ -206,8 +243,13 @@ function saveNames() {
   if (!a || !b || !c) { showToast('이름을 모두 입력해주세요!'); return; }
   localStorage.setItem('duduk_names', JSON.stringify({ A: a, B: b, C: c }));
   document.getElementById('nickname-screen').style.display = 'none';
-  initUI();
-  load();
+  initUI(); load();
+}
+
+function skipNames() {
+  localStorage.setItem('duduk_names', JSON.stringify({ A:'A', B:'B', C:'C' }));
+  document.getElementById('nickname-screen').style.display = 'none';
+  initUI(); load();
 }
 
 function changeName() {
@@ -218,17 +260,14 @@ function changeName() {
   document.getElementById('nickname-screen').style.display = 'flex';
 }
 
-// 필터 상태
 let activeFilter = 'all';
 
 function initUI() {
   const names = getNames() || { A:'A', B:'B', C:'C' };
-
-  // 셀렉트 박스
   const sel = document.getElementById('sel-member');
   sel.innerHTML = KEYS.map(k => `<option value="${k}">${names[k]}</option>`).join('');
-
-  // 필터 탭
+  const editSel = document.getElementById('edit-member');
+  editSel.innerHTML = KEYS.map(k => `<option value="${k}">${names[k]}</option>`).join('');
   const tabs = document.getElementById('filter-tabs');
   tabs.innerHTML = `<button class="filter-tab on" onclick="setFilter('all')">전체</button>` +
     KEYS.map(k => `<button class="filter-tab" onclick="setFilter('${k}')">${names[k]}</button>`).join('');
@@ -237,8 +276,7 @@ function initUI() {
 function setFilter(key) {
   activeFilter = key;
   document.querySelectorAll('.filter-tab').forEach((t, i) => {
-    const vals = ['all', ...KEYS];
-    t.classList.toggle('on', vals[i] === key);
+    t.classList.toggle('on', ['all',...KEYS][i] === key);
   });
   load();
 }
@@ -248,35 +286,37 @@ async function fetchEntries() {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?order=created_at.desc`, { headers });
   return res.ok ? res.json() : [];
 }
-async function insertEntry(entry) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries`, { method: 'POST', headers, body: JSON.stringify(entry) });
+async function insertEntry(e) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries`, { method: 'POST', headers, body: JSON.stringify(e) });
   return res.ok;
 }
 async function deleteEntry(id) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?id=eq.${id}`, { method: 'DELETE', headers });
   return res.ok;
 }
+async function updateEntry(id, data) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?id=eq.${id}`, {
+    method: 'PATCH', headers, body: JSON.stringify(data)
+  });
+  return res.ok;
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 function render(entries) {
   const total = entries.reduce((s, e) => s + e.amt, 0);
   const pct = Math.min(100, Math.round(total / GOAL * 100));
-
   document.getElementById('total-amt').textContent = fmt(total);
   document.getElementById('pct-label').textContent = pct + '% 달성';
   document.getElementById('remain-label').textContent = total >= GOAL ? '🎉 목표 달성!' : fmt(GOAL - total) + ' 남음';
-
   const bar = document.getElementById('bar');
   bar.style.width = pct + '%';
   bar.className = 'bar-fill' + (pct >= 100 ? ' over' : pct >= 75 ? ' warn' : '');
 
-  // 멤버 카드
   const mc = document.getElementById('member-cards');
   mc.innerHTML = KEYS.map((k, i) => {
     const s = entries.filter(e => e.member === k).reduce((a, e) => a + e.amt, 0);
@@ -291,22 +331,16 @@ function render(entries) {
     </div>`;
   }).join('');
 
-  // 로그 필터링
   const filtered = activeFilter === 'all' ? entries : entries.filter(e => e.member === activeFilter);
   const list = document.getElementById('log-list');
+  if (filtered.length === 0) { list.innerHTML = '<div class="empty">기록이 없어요 🥲</div>'; return; }
 
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty">기록이 없어요 🥲</div>';
-    return;
-  }
-
-  // 필터 상태일 때 소계 표시
   let subtotal = '';
   if (activeFilter !== 'all') {
     const sub = filtered.reduce((s, e) => s + e.amt, 0);
+    const cl = COLORS[KEYS.indexOf(activeFilter)];
     subtotal = `<div style="font-size:12px;color:var(--muted);text-align:right;margin-bottom:10px;">
-      ${nameOf(activeFilter)} 합계: <span style="color:var(--${COLORS[KEYS.indexOf(activeFilter)]});font-weight:700;font-family:'Gmarket Sans',sans-serif;">${fmt(sub)}</span>
-    </div>`;
+      ${nameOf(activeFilter)} 합계: <span style="color:var(--${cl});font-weight:700;font-family:'Gmarket Sans',sans-serif;">${fmt(sub)}</span></div>`;
   }
 
   list.innerHTML = subtotal + filtered.map(e => {
@@ -317,7 +351,10 @@ function render(entries) {
       <div class="log-memo">${e.memo}</div>
       <div class="log-date">${e.date}</div>
       <div class="log-amt" style="color:var(--${cl})">${fmt(e.amt)}</div>
-      <button class="log-del" onclick="handleDelete(${e.id})" aria-label="삭제">×</button>
+      <div class="log-actions">
+        <button class="log-btn edit" onclick="openEdit(${e.id},'${e.member}','${e.memo.replace(/'/g,"\\'")}',${e.amt})" title="수정">✏️</button>
+        <button class="log-btn del" onclick="handleDelete(${e.id})" title="삭제">🗑️</button>
+      </div>
     </div>`;
   }).join('');
 }
@@ -332,7 +369,6 @@ async function addEntry() {
   const memo = document.getElementById('inp-memo').value.trim() || '기타';
   const amt = parseInt(document.getElementById('inp-amt').value);
   if (!amt || amt <= 0) { document.getElementById('inp-amt').focus(); return; }
-
   const btn = document.getElementById('add-btn');
   btn.disabled = true; btn.textContent = '저장 중...';
   const ok = await insertEntry({ member, memo, amt, date: today() });
@@ -341,28 +377,46 @@ async function addEntry() {
     document.getElementById('inp-amt').value = '';
     showToast('✓ 추가됐어요!');
     await load();
-  } else {
-    showToast('오류가 났어요 😢');
-  }
+  } else { showToast('오류가 났어요 😢'); }
   btn.disabled = false; btn.textContent = '추가하기';
 }
 
 async function handleDelete(id) {
+  if (!confirm('이 내역을 삭제할까요?')) return;
   await deleteEntry(id);
+  showToast('삭제됐어요');
   await load();
+}
+
+// 수정 모달
+let editingId = null;
+function openEdit(id, member, memo, amt) {
+  editingId = id;
+  document.getElementById('edit-member').value = member;
+  document.getElementById('edit-memo').value = memo;
+  document.getElementById('edit-amt').value = amt;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+function closeEdit() {
+  editingId = null;
+  document.getElementById('edit-modal').style.display = 'none';
+}
+async function saveEdit() {
+  const member = document.getElementById('edit-member').value;
+  const memo = document.getElementById('edit-memo').value.trim() || '기타';
+  const amt = parseInt(document.getElementById('edit-amt').value);
+  if (!amt || amt <= 0) { document.getElementById('edit-amt').focus(); return; }
+  const ok = await updateEntry(editingId, { member, memo, amt });
+  if (ok) { showToast('✓ 수정됐어요!'); closeEdit(); await load(); }
+  else { showToast('오류가 났어요 😢'); }
 }
 
 document.getElementById('inp-amt').addEventListener('keydown', e => { if (e.key === 'Enter') addEntry(); });
 document.getElementById('month-label').textContent = new Date().getFullYear() + '년 ' + (new Date().getMonth() + 1) + '월 지출 현황';
 
-// 시작
 const names = getNames();
-if (!names) {
-  document.getElementById('nickname-screen').style.display = 'flex';
-} else {
-  initUI();
-  load();
-}
+if (!names) { document.getElementById('nickname-screen').style.display = 'flex'; }
+else { initUI(); load(); }
 </script>
 </body>
 </html>
