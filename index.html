@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>duduk 💸</title>
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #2a2a2a;
+    --accent: #c8f135;
+    --accent2: #7fff6e;
+    --text: #f0f0f0;
+    --muted: #666;
+    --a: #5b9cf6;
+    --b: #f97b6b;
+    --c: #a78bfa;
+    --goal: 1500000;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 80px;
+  }
+  h1 {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+  .progress-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .total-amt {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -1px;
+  }
+  .goal-label { font-size: 12px; color: var(--muted); }
+  .bar-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--accent);
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .bar-fill.warn { background: #f5a623; }
+  .bar-fill.over { background: #f06060; }
+  .progress-bot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .members {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .member-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .member-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 14px; font-weight: 700;
+    margin: 0 auto 8px;
+  }
+  .dot-a { background: rgba(91,156,246,0.15); color: var(--a); }
+  .dot-b { background: rgba(249,123,107,0.15); color: var(--b); }
+  .dot-c { background: rgba(167,139,250,0.15); color: var(--c); }
+  .member-amt {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .member-share { font-size: 11px; color: var(--muted); }
+
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 20px;
+  }
+  .input-card h2 {
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .input-row {
+    display: flex; gap: 8px; margin-bottom: 10px; align-items: center;
+  }
+  .input-row label { font-size: 12px; color: var(--muted); width: 30px; flex-shrink: 0; }
+  select, input[type=text], input[type=number] {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:focus, input:focus { border-color: var(--accent); }
+  select option { background: var(--surface2); }
+  .add-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #0f0f0f;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .add-btn:active { opacity: 0.85; transform: scale(0.98); }
+  .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .log-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .log-card h2 {
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .log-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .log-item:last-child { border-bottom: none; }
+  .log-badge {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'Gmarket Sans', sans-serif;
+  }
+  .badge-a { background: rgba(91,156,246,0.15); color: var(--a); }
+  .badge-b { background: rgba(249,123,107,0.15); color: var(--b); }
+  .badge-c { background: rgba(167,139,250,0.15); color: var(--c); }
+  .log-memo { flex: 1; color: var(--text); font-size: 13px; }
+  .log-date { font-size: 11px; color: var(--muted); }
+  .log-amt { font-family: 'Gmarket Sans', sans-serif; font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .log-del {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 18px; padding: 2px 4px;
+    border-radius: 6px; line-height: 1;
+    transition: color 0.15s;
+  }
+  .log-del:hover { color: #f06060; }
+  .empty { font-size: 13px; color: var(--muted); text-align: center; padding: 24px 0; }
+  .loading { font-size: 13px; color: var(--muted); text-align: center; padding: 16px 0; }
+
+  .reset-wrap { text-align: center; margin-top: 16px; }
+  .reset-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 12px; color: var(--muted);
+    text-decoration: underline; font-family: inherit;
+  }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #0f0f0f;
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    padding: 10px 20px; border-radius: 99px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    z-index: 99;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<h1>duduk 💸</h1>
+<p class="subtitle" id="month-label"></p>
+
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span class="total-amt" id="total-amt">0원</span>
+    <span class="goal-label">목표 150만원</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+  <div class="progress-bot">
+    <span id="pct-label">0% 달성</span>
+    <span id="remain-label">1,500,000원 남음</span>
+  </div>
+</div>
+
+<div class="members" id="member-cards"></div>
+
+<div class="input-card">
+  <h2>지출 추가</h2>
+  <div class="input-row">
+    <label>누구</label>
+    <select id="sel-member">
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+    </select>
+  </div>
+  <div class="input-row">
+    <label>내용</label>
+    <input type="text" id="inp-memo" placeholder="카페, 마트, 교통...">
+  </div>
+  <div class="input-row">
+    <label>금액</label>
+    <input type="number" id="inp-amt" placeholder="5000" min="0" step="100">
+  </div>
+  <button class="add-btn" id="add-btn" onclick="addEntry()">추가하기</button>
+</div>
+
+<div class="log-card">
+  <h2>기록</h2>
+  <div id="log-list"><div class="loading">불러오는 중...</div></div>
+</div>
+
+<div class="reset-wrap">
+  <button class="reset-btn" onclick="resetAll()">이번 달 초기화</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://ledppraflokltqsymiei.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxlZHBwcmFmbG9rbHRxc3ltaWVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDYxMzgsImV4cCI6MjA5NTg4MjEzOH0.kBADfdc-qTHScHmmDasFtPMkjkyDJxqaRqqoLXX_j0o';
+const GOAL = 1500000;
+
+const headers = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+function fmt(n) { return Number(n).toLocaleString('ko-KR') + '원'; }
+function today() {
+  return new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+}
+
+document.getElementById('month-label').textContent =
+  new Date().getFullYear() + '년 ' + (new Date().getMonth() + 1) + '월 지출 현황';
+
+async function fetchEntries() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?order=created_at.desc`, { headers });
+  return res.ok ? res.json() : [];
+}
+
+async function insertEntry(entry) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries`, {
+    method: 'POST', headers,
+    body: JSON.stringify(entry)
+  });
+  return res.ok;
+}
+
+async function deleteEntry(id) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?id=eq.${id}`, {
+    method: 'DELETE', headers
+  });
+  return res.ok;
+}
+
+async function deleteAll() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/entries?id=gt.0`, {
+    method: 'DELETE', headers
+  });
+  return res.ok;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function render(entries) {
+  const total = entries.reduce((s, e) => s + e.amt, 0);
+  const pct = Math.min(100, Math.round(total / GOAL * 100));
+
+  document.getElementById('total-amt').textContent = fmt(total);
+  document.getElementById('pct-label').textContent = pct + '% 달성';
+  document.getElementById('remain-label').textContent =
+    total >= GOAL ? '🎉 목표 달성!' : fmt(GOAL - total) + ' 남음';
+
+  const bar = document.getElementById('bar');
+  bar.style.width = pct + '%';
+  bar.className = 'bar-fill' + (pct >= 100 ? ' over' : pct >= 75 ? ' warn' : '');
+
+  const members = ['A', 'B', 'C'];
+  const mc = document.getElementById('member-cards');
+  mc.innerHTML = members.map(m => {
+    const s = entries.filter(e => e.member === m).reduce((a, e) => a + e.amt, 0);
+    const sp = total > 0 ? Math.round(s / total * 100) : 0;
+    const cls = m.toLowerCase();
+    return `<div class="member-card">
+      <div class="member-dot dot-${cls}">${m}</div>
+      <div class="member-amt" style="color:var(--${cls})">${fmt(s)}</div>
+      <div class="member-share">${sp}%</div>
+    </div>`;
+  }).join('');
+
+  const list = document.getElementById('log-list');
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="empty">아직 기록이 없어요 🥲</div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => {
+    const cls = e.member.toLowerCase();
+    return `<div class="log-item">
+      <div class="log-badge badge-${cls}">${e.member}</div>
+      <div class="log-memo">${e.memo}</div>
+      <div class="log-date">${e.date}</div>
+      <div class="log-amt" style="color:var(--${cls})">${fmt(e.amt)}</div>
+      <button class="log-del" onclick="handleDelete(${e.id})" aria-label="삭제">×</button>
+    </div>`;
+  }).join('');
+}
+
+async function load() {
+  const entries = await fetchEntries();
+  render(entries);
+}
+
+async function addEntry() {
+  const member = document.getElementById('sel-member').value;
+  const memo = document.getElementById('inp-memo').value.trim() || '기타';
+  const amt = parseInt(document.getElementById('inp-amt').value);
+  if (!amt || amt <= 0) { document.getElementById('inp-amt').focus(); return; }
+
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true;
+  btn.textContent = '저장 중...';
+
+  const ok = await insertEntry({ member, memo, amt, date: today() });
+  if (ok) {
+    document.getElementById('inp-memo').value = '';
+    document.getElementById('inp-amt').value = '';
+    showToast('✓ 추가됐어요!');
+    await load();
+  } else {
+    showToast('오류가 났어요 😢');
+  }
+  btn.disabled = false;
+  btn.textContent = '추가하기';
+}
+
+async function handleDelete(id) {
+  await deleteEntry(id);
+  await load();
+}
+
+async function resetAll() {
+  if (!confirm('이번 달 기록을 모두 삭제할까요?')) return;
+  await deleteAll();
+  await load();
+}
+
+document.getElementById('inp-amt').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addEntry();
+});
+
+load();
+</script>
+</body>
+</html>
