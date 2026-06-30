@@ -197,6 +197,10 @@
     <label>금액</label>
     <input type="number" id="inp-amt" placeholder="5000" min="0" step="100">
   </div>
+  <div class="input-row">
+    <label>날짜</label>
+    <input type="date" id="inp-date">
+  </div>
   <button class="add-btn" id="add-btn" onclick="addEntry()">추가하기</button>
 </div>
  
@@ -230,6 +234,21 @@ const headers = {
  
 function fmt(n) { return Number(n).toLocaleString('ko-KR') + '원'; }
 function today() { return new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }); }
+
+function selectedDateValue(){
+ const v=document.getElementById('inp-date')?.value;
+ return v || new Date().toISOString().slice(0,10);
+}
+
+function monthFromDate(v){
+ return v.slice(0,7);
+}
+
+function displayDate(v){
+ const d=new Date(v);
+ return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
+}
+
  
 function getNames() {
   try { return JSON.parse(localStorage.getItem('duduk_names') || 'null'); } catch(e) { return null; }
@@ -246,13 +265,13 @@ function saveNames() {
   if (!a || !b || !c) { showToast('이름을 모두 입력해주세요!'); return; }
   localStorage.setItem('duduk_names', JSON.stringify({ A: a, B: b, C: c }));
   document.getElementById('nickname-screen').style.display = 'none';
-  initUI(); initMonth(); load();
+  initUI(); initMonth(); document.getElementById('inp-date').value=new Date().toISOString().slice(0,10); load();
 }
  
 function skipNames() {
   localStorage.setItem('duduk_names', JSON.stringify({ A:'A', B:'B', C:'C' }));
   document.getElementById('nickname-screen').style.display = 'none';
-  initUI(); initMonth(); load();
+  initUI(); initMonth(); document.getElementById('inp-date').value=new Date().toISOString().slice(0,10); load();
 }
  
 function changeName() {
@@ -411,7 +430,14 @@ async function addEntry() {
   if (!amt || amt <= 0) { document.getElementById('inp-amt').focus(); return; }
   const btn = document.getElementById('add-btn');
   btn.disabled = true; btn.textContent = '저장 중...';
-  const ok = await insertEntry({ member, memo, amt, date: today(), month:selectedMonth });
+  const picked=selectedDateValue();
+  const ok = await insertEntry({
+    member,
+    memo,
+    amt,
+    date: displayDate(picked),
+    month: monthFromDate(picked)
+  });
   if (ok) {
     document.getElementById('inp-memo').value = '';
     document.getElementById('inp-amt').value = '';
@@ -455,7 +481,7 @@ document.getElementById('inp-amt').addEventListener('keydown', e => { if (e.key 
  
 const names = getNames();
 if (!names) { document.getElementById('nickname-screen').style.display = 'flex'; }
-else { initUI(); initMonth(); load(); }
+else { initUI(); initMonth(); document.getElementById('inp-date').value=new Date().toISOString().slice(0,10); load(); }
 </script>
 </body>
 </html>
